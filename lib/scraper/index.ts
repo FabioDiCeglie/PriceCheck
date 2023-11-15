@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { extractPrice } from '../utils';
+import { extractCurrency, extractPrice } from '../utils';
 
 export const scrapeAmazonProduct = async (url: string) => {
   if (!url) return;
@@ -39,7 +39,18 @@ export const scrapeAmazonProduct = async (url: string) => {
         $('#listPrice'),
         $('#priceblock_dealprice'),
         $('.a-size-base.a-color-price')
-      );
+    );
+
+    const outOfStock = $('#availability span').text().trim().toLowerCase() === 'currently unavailable';
+
+    const images = 
+    $('#imgBlkFront').attr('data-a-dynamic-image') || 
+    $('#landingImage').attr('data-a-dynamic-image') ||
+    '{}'
+
+    const imageUrls = Object.keys(JSON.parse(images));
+
+    const currency = extractCurrency($('.a-price-symbol'))
 
     console.log(title);
   } catch (error: any) {
