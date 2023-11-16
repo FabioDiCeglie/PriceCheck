@@ -2,6 +2,7 @@
 
 import { connectToDB } from "../mongoose";
 import { scrapeAmazonProduct } from "../scraper";
+import Product from "../models/product.model";
 
 export const scrapeAndStoreProduct = async (productUrl: string) => {
     if(!productUrl) return;
@@ -13,7 +14,10 @@ export const scrapeAndStoreProduct = async (productUrl: string) => {
 
         if(!scrapedProduct) return;
 
-        const product = {}
+        let product = scrapedProduct;
+
+        const existingProduct = await Product.findOne({ url: scrapedProduct.url });
+
     }catch(error: any){
         throw new Error(`Failed to create/update product: ${error.message}`)
     }
