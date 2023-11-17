@@ -100,14 +100,14 @@ try{
 
   if(!product) return;
 
-  const userExist = product.user.some((user: User) => user.email === userEmail )
+  const userExist = product.users.some((user: User) => user.email === userEmail )
 
   if(!userExist){
     product.users.push({ email: userEmail });
 
     await product.save();
 
-    const emailContent = generateEmailBody(product, 'WELCOME')
+    const emailContent = await generateEmailBody(product, 'WELCOME')
 
     await sendEmail(emailContent, [userEmail])
   }

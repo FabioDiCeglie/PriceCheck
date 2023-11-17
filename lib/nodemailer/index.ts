@@ -1,3 +1,5 @@
+'use server';
+
 import { EmailContent, EmailProductInfo, NotificationType } from '@/types';
 import nodemailer from 'nodemailer';
 
@@ -8,7 +10,7 @@ const Notification = {
     THRESHOLD_MET: 'THRESHOLD_MET',
   }
 
-export const generateEmailBody = (
+export const generateEmailBody = async (
   product: EmailProductInfo,
   type: NotificationType
 ) => {
