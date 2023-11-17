@@ -5,6 +5,8 @@ import { scrapeAmazonProduct } from '../scraper';
 import Product from '../models/product.model';
 import { getAveragePrice, getHighestPrice, getLowestPrice } from '../utils';
 import { revalidatePath } from 'next/cache';
+import { User } from '@/types';
+import { generateEmailBody, sendEmail } from '../nodemailer';
 
 export const scrapeAndStoreProduct = async (productUrl: string) => {
   if (!productUrl) return;
@@ -90,3 +92,27 @@ export const getSimilarProducts = async (productId: string) => {
     console.log(error);
   }
 };
+
+export const addUserEmailToProduct = async (productId: string, userEmail: string) => {
+try{
+  // Send out email
+  const product = await Product.findById(productId)
+
+  if(!product) return;
+
+  const userExist = product.user.some((user: User) => user.email === userEmail )
+
+  if(!userExist){
+    product.users.push({ email: userEmail });
+
+    await product.save();
+
+    const emailContent = generateEmailBody(product, 'WELCOME')
+
+    await sendEmail(emailContent, [userEmail])
+  }
+
+}catch(error){
+  console.log(error)
+}
+}
