@@ -43,7 +43,7 @@ export function extractPrice(...elements: any) {
         firstPrice = cleanPrice.match(/\d+\.\d{2}/)?.[0];
       } 
 
-      return firstPrice || cleanPrice;
+      return cleanPrice || firstPrice;
     }
   }
 
@@ -130,8 +130,19 @@ export const getEmailNotifType = (
 };
 
 export const formatNumber = (num: number = 0) => {
-  return num.toLocaleString(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
+  // Check if the number contains a decimal point
+  if (num % 1 === 0) {
+    // If it doesn't contain a decimal point, return the first two digits
+    const firstTwoDigits = Number(num.toString().slice(0, 2));
+    return firstTwoDigits.toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+  } else {
+    // If it contains a decimal point, use the original formatting logic
+    return num.toLocaleString(undefined, {
+      minimumFractionDigits: 3,
+      maximumFractionDigits: 3,
+    });
+  }
 };
