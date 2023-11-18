@@ -2,6 +2,8 @@
 
 This is a full-stack application built with NextJS, utilizing MongoDB as the database and Mongoose as the ODM (Object Data Modeling). The app includes functionality to retrieve product information from Amazon through a cron job and sends email notifications to users using Nodemailer.
 
+![App Architecture](/public/assets/pictureapp)
+
 ## Table of Contents
 
 - [Features](#features)
