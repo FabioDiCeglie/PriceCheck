@@ -81,10 +81,10 @@ export const getSimilarProducts = async (productId: string) => {
 
     const currentProduct = await Product.findById(productId);
 
-    if(!currentProduct) return null;
+    if (!currentProduct) return null;
 
     const similarProducts = await Product.find({
-      _id: { $ne: productId }
+      _id: { $ne: productId },
     }).limit(3);
 
     return similarProducts;
@@ -93,26 +93,30 @@ export const getSimilarProducts = async (productId: string) => {
   }
 };
 
-export const addUserEmailToProduct = async (productId: string, userEmail: string) => {
-try{
-  // Send out email
-  const product = await Product.findById(productId)
+export const addUserEmailToProduct = async (
+  productId: string,
+  userEmail: string
+) => {
+  try {
+    // Send out email
+    const product = await Product.findById(productId);
 
-  if(!product) return;
+    if (!product) return;
 
-  const userExist = product.users.some((user: User) => user.email === userEmail )
+    const userExist = product.users.some(
+      (user: User) => user.email === userEmail
+    );
 
-  if(!userExist){
-    product.users.push({ email: userEmail });
+    if (!userExist) {
+      product.users.push({ email: userEmail });
 
-    await product.save();
+      await product.save();
 
-    const emailContent = await generateEmailBody(product, 'WELCOME')
+      const emailContent = await generateEmailBody(product, 'WELCOME');
 
-    await sendEmail(emailContent, [userEmail])
+      await sendEmail(emailContent, [userEmail]);
+    }
+  } catch (error) {
+    console.log(error);
   }
-
-}catch(error){
-  console.log(error)
-}
-}
+};
